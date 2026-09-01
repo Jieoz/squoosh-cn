@@ -44,7 +44,7 @@ cp -a dist.orig build
 if grep -q 'sq-cn-fab' build/c/batch-cn.js 2>/dev/null \
    || ! grep -q 'google-analytics' build/index.html; then
   echo "dist.orig 看起来已经是打过补丁的成品（含批量面板 / 已去 GA）。" >&2
-  echo "build.sh 需要未经修改的上游 Squoosh 产物；见 README「准备基线产物」路线 B。" >&2
+  echo "build.sh 需要未经修改的上游 Squoosh 产物；见 README「准备基线产物」。" >&2
   echo "如果你只想部署，直接用 release 附件解包上传，不需要跑 build.sh。" >&2
   exit 1
 fi
