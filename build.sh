@@ -38,6 +38,17 @@ export SQ_SITE_ORIGIN SQ_BASE_PATH SQ_SOURCE_BASE_PATH
 rm -rf build
 cp -a dist.orig build
 
+# 0) 预检：dist.orig 必须是**未打补丁的上游产物**。
+#    Release 附件里的 squoosh-cn-build.tar.gz 是已打好补丁的成品，
+#    可直接部署，但不能当 dist.orig 用（补丁不可二次施加）。
+if grep -q 'sq-cn-fab' build/c/batch-cn.js 2>/dev/null \
+   || ! grep -q 'google-analytics' build/index.html; then
+  echo "dist.orig 看起来已经是打过补丁的成品（含批量面板 / 已去 GA）。" >&2
+  echo "build.sh 需要未经修改的上游 Squoosh 产物；见 README「准备基线产物」路线 B。" >&2
+  echo "如果你只想部署，直接用 release 附件解包上传，不需要跑 build.sh。" >&2
+  exit 1
+fi
+
 # 1) 批量面板注入
 #    ?v= 取自文件内容哈希：/c/ 下是 immutable 长缓存，固定版本号改了内容也不会重取
 cp src/batch-cn.js build/c/batch-cn.js

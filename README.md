@@ -24,8 +24,8 @@
 git clone https://github.com/Jieoz/squoosh-cn.git
 cd squoosh-cn
 
-# 1) 准备基线产物（见下节）
-#    最终得到 dist.orig/ 目录
+# 1) 准备基线产物：编译上游 Squoosh 得到 dist.orig/（见下节）
+#    只想直接部署的话下载 release 附件即可，无需这一步
 
 # 2) 配置
 cp config.env.example config.env
@@ -35,24 +35,23 @@ $EDITOR config.env          # 填域名、部署路径、SSH 信息
 ./build.sh                  # 产出 build/
 
 # 4) 部署
-./deploy.sh                 # rsync 到远端并校验 md5
+./deploy.sh                 # 打包上传、原子替换、md5 回读校验
 ```
 
 `config.env` 已被 `.gitignore` 忽略，你的域名和私钥路径不会进 git。
 
 ### 准备基线产物
 
-`dist.orig/` 是 Squoosh 的**编译产物**（82 个文件、约 26 MB，含 WASM），
-按仓库体积与上游许可考虑没有入库。两种拿法：
+`dist.orig/` 是 Squoosh 的**未打补丁的上游编译产物**（82 个文件、约 26 MB，含 WASM），
+按仓库体积与上游许可考虑没有入库。
 
-**A. 从 GitHub Release 下载**（本仓库 release 附带 `squoosh-cn-build.tar.gz`，
-是已打好补丁的 `build/`，可直接部署；如果只想部署不想改代码，用这个最快）
+> **只想部署、不改代码？** 直接下载 release 附件 `squoosh-cn-build.tar.gz`，
+> 解包上传即可，**不需要** `dist.orig`，也不需要跑 `build.sh`。
+> 那个附件是已打好补丁的成品，不能当 `dist.orig` 用（补丁不可二次施加，
+> `build.sh` 会预检并拒绝）。默认基路径 `/squoosh-cn/`、og:image 指向
+> `https://example.com`；要换成自己的域名就走下面的自编译路线。
 
-```bash
-tar xzf squoosh-cn-build.tar.gz     # 得到可直接上传的静态目录
-```
-
-**B. 自己编译上游**
+自己编译上游：
 
 ```bash
 git clone https://github.com/GoogleChromeLabs/squoosh.git
