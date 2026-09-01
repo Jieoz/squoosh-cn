@@ -1,0 +1,14 @@
+# 本地配置（含域名、SSH 主机与私钥路径），不进仓库
+config.env
+
+# 构建产物与基线（体积大、且是官方 Squoosh 编译产物）
+build/
+dist.orig/
+dist/
+serveroot/
+
+# 临时
+*.tgz
+__pycache__/
+*.pyc
+.DS_Store
